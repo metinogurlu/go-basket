@@ -4,7 +4,6 @@ import (
 	models "basket/domain"
 	"context"
 	"encoding/json"
-	"errors"
 
 	"github.com/go-redis/redis/v8"
 )
@@ -29,13 +28,13 @@ func getRedisClient() *redis.Client {
 	})
 }
 
-func (repo *RedisRepository) GetBasket(ctx context.Context, id string) (*models.CustomerBasket, error) {
+func (repo *RedisRepository) GetBasket(ctx context.Context, id string) (models.CustomerBasket, error) {
 	var basket models.CustomerBasket
 
 	s, _ := repo.db.Get(repo.ctx, id).Result()
 	json.Unmarshal([]byte(s), &basket)
 
-	return &basket, nil
+	return basket, nil
 }
 
 func (repo *RedisRepository) UpdateBasket(ctx context.Context, id string, b models.CustomerBasket) error {
@@ -45,8 +44,4 @@ func (repo *RedisRepository) UpdateBasket(ctx context.Context, id string, b mode
 	}
 
 	return nil
-}
-
-func (repo *RedisRepository) AddToBasket(ctx context.Context, id string, basketItem models.BasketItem) error {
-	return errors.New("not implemented")
 }

@@ -1,6 +1,10 @@
 package basket
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	. "github.com/ahmetb/go-linq/v3"
+)
 
 type CustomerBasket struct {
 	PromoCode         string        `json:"promoCode"`
@@ -12,4 +16,10 @@ type CustomerBasket struct {
 
 func (b CustomerBasket) MarshalBinary() ([]byte, error) {
 	return json.Marshal(b)
+}
+
+func (b CustomerBasket) HasSameItem(item BasketItem) bool {
+	return From(*b.Items).AnyWith(func(c interface{}) bool {
+		return c.(BasketItem).Equals(item)
+	})
 }
