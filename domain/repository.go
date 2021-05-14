@@ -1,7 +1,9 @@
 package basket
 
+import "context"
+
 type Repository interface {
-	GetBasket(id string) (*CustomerBasket, error)
-	UpdateBasket(id string, basket *CustomerBasket)
-	AddToBasket(id string, basketItem *BasketItem) error
+	GetBasket(ctx context.Context, id string) (*CustomerBasket, error)
+	UpdateBasket(ctx context.Context, id string, basket CustomerBasket) error
+	AddToBasket(ctx context.Context, id string, basketItem BasketItem) error
 }

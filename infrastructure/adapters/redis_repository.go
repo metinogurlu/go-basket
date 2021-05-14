@@ -29,7 +29,7 @@ func getRedisClient() *redis.Client {
 	})
 }
 
-func (repo *RedisRepository) GetBasket(id string) (*models.CustomerBasket, error) {
+func (repo *RedisRepository) GetBasket(ctx context.Context, id string) (*models.CustomerBasket, error) {
 	var basket models.CustomerBasket
 
 	s, _ := repo.db.Get(repo.ctx, id).Result()
@@ -38,13 +38,15 @@ func (repo *RedisRepository) GetBasket(id string) (*models.CustomerBasket, error
 	return &basket, nil
 }
 
-func (repo *RedisRepository) UpdateBasket(id string, basket *models.CustomerBasket) {
-	err := repo.db.Set(repo.ctx, id, basket, 0)
+func (repo *RedisRepository) UpdateBasket(ctx context.Context, id string, b models.CustomerBasket) error {
+	err := repo.db.Set(repo.ctx, id, b, 0)
 	if err != nil {
-		panic(err)
+		return err.Err()
 	}
+
+	return nil
 }
 
-func (repo *RedisRepository) AddToBasket(id string, basketItem *models.BasketItem) error {
+func (repo *RedisRepository) AddToBasket(ctx context.Context, id string, basketItem models.BasketItem) error {
 	return errors.New("not implemented")
 }
