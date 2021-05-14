@@ -1,8 +1,9 @@
 package main
 
 import (
-	controller "basket/app"
-	"basket/infrastructure/adapters"
+	"basket/app"
+	controller "basket/interfaces"
+	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -12,12 +13,14 @@ import (
 
 func main() {
 
-	var r = mux.NewRouter()
-	var repo = adapters.NewRedisRepository()
-	c := controller.NewBasketController(repo)
+	r := mux.NewRouter()
+	ctx := context.Background()
+	app := app.NewApplication(ctx)
+	c := controller.NewBasketController(app)
 
 	r.HandleFunc("/baskets/{id}", c.GetBasket).Methods("GET")
 	r.HandleFunc("/baskets/{id}", c.UpdateBasket).Methods("PUT")
+	r.HandleFunc("/baskets/{id}", c.AddtoBasket).Methods("POST")
 
 	port := ":9000" // port for run the app
 
