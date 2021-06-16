@@ -1,6 +1,7 @@
 package adapters
 
 import (
+	"basket/config"
 	models "basket/domain"
 	"context"
 	"encoding/json"
@@ -9,20 +10,24 @@ import (
 )
 
 type RedisRepository struct {
-	db  *redis.Client
-	ctx context.Context
+	db            *redis.Client
+	ctx           context.Context
+	configuration config.Configuration
 }
 
 func NewRedisRepository() *RedisRepository {
+	c := config.NewConfiguration()
+	
 	return &RedisRepository{
-		db:  getRedisClient(),
-		ctx: context.Background(),
+		db:            getRedisClient(c.Redis.ConnectionString),
+		ctx:           context.Background(),
+		configuration: c,
 	}
 }
 
-func getRedisClient() *redis.Client {
+func getRedisClient(connectionString string) *redis.Client {
 	return redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
+		Addr:     connectionString,
 		Password: "", // no password set
 		DB:       0,  // use default DB
 	})

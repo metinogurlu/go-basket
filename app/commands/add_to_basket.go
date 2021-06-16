@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"basket/config"
 	models "basket/domain"
 	"context"
 
@@ -8,7 +9,8 @@ import (
 )
 
 type AddToBasketHandler struct {
-	repo models.Repository
+	repo          models.Repository
+	configuration config.Configuration
 }
 
 func NewAddToBasketHandler(repo models.Repository) AddToBasketHandler {
@@ -16,7 +18,7 @@ func NewAddToBasketHandler(repo models.Repository) AddToBasketHandler {
 		panic("repo is nil")
 	}
 
-	return AddToBasketHandler{repo}
+	return AddToBasketHandler{repo, config.NewConfiguration()}
 }
 
 func (h AddToBasketHandler) Handle(ctx context.Context, id string, itemToAdd models.BasketItem) error {
@@ -36,10 +38,11 @@ func (h AddToBasketHandler) Handle(ctx context.Context, id string, itemToAdd mod
 			itemToAdd.Quantity = 0
 		}
 		// TODO: Handle basket rules
-		if basketItem.Quantity+itemToAdd.Quantity <= 20 {
+		if basketItem.Quantity+itemToAdd.Quantity <=
+			h.configuration.BasketRules.MaximumSameItemInBasket {
 			basketItem.Quantity += itemToAdd.Quantity
 		}
-	} else if len(*b.Items) < 50 {
+	} else if len(*b.Items) < h.configuration.BasketRules.MaximumItemsInBasket {
 		items := append(*b.Items, itemToAdd)
 		b.Items = &items
 	}

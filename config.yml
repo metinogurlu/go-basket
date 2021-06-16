@@ -1,0 +1,9 @@
+redis:
+  connectionString: "localhost:6379"
+  instanceName: "basket"
+
+basketRules:
+  maximumItemsInBasket: 50
+  maximumSameItemInBasket: 20
+  maximumCharLimitOfBasketNote: 255
+  expirationDurationInDays: 90
