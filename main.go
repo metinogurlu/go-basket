@@ -22,7 +22,7 @@ func main() {
 	r.HandleFunc("/baskets/{id}", c.UpdateBasket).Methods("PUT")
 	r.HandleFunc("/baskets/{id}", c.AddtoBasket).Methods("POST")
 
-	port := ":9000" // port for run the app
+	port := ":9001" // port for run the app
 
 	fmt.Println("Start listening on port", port) // server up
 

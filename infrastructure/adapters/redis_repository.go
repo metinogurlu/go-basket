@@ -1,41 +1,45 @@
 package adapters
 
 import (
+	"basket/config"
 	models "basket/domain"
 	"context"
 	"encoding/json"
-	"errors"
 
 	"github.com/go-redis/redis/v8"
 )
 
 type RedisRepository struct {
-	db  *redis.Client
-	ctx context.Context
+	db            *redis.Client
+	ctx           context.Context
+	configuration config.Configuration
 }
 
 func NewRedisRepository() *RedisRepository {
+	c := config.NewConfiguration()
+	
 	return &RedisRepository{
-		db:  getRedisClient(),
-		ctx: context.Background(),
+		db:            getRedisClient(c.Redis.ConnectionString),
+		ctx:           context.Background(),
+		configuration: c,
 	}
 }
 
-func getRedisClient() *redis.Client {
+func getRedisClient(connectionString string) *redis.Client {
 	return redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
+		Addr:     connectionString,
 		Password: "", // no password set
 		DB:       0,  // use default DB
 	})
 }
 
-func (repo *RedisRepository) GetBasket(ctx context.Context, id string) (*models.CustomerBasket, error) {
+func (repo *RedisRepository) GetBasket(ctx context.Context, id string) (models.CustomerBasket, error) {
 	var basket models.CustomerBasket
 
-	s, _ := repo.db.Get(repo.ctx, id).Result()
+	s, err := repo.db.Get(repo.ctx, id).Result()
 	json.Unmarshal([]byte(s), &basket)
 
-	return &basket, nil
+	return basket, err
 }
 
 func (repo *RedisRepository) UpdateBasket(ctx context.Context, id string, b models.CustomerBasket) error {
@@ -45,8 +49,4 @@ func (repo *RedisRepository) UpdateBasket(ctx context.Context, id string, b mode
 	}
 
 	return nil
-}
-
-func (repo *RedisRepository) AddToBasket(ctx context.Context, id string, basketItem models.BasketItem) error {
-	return errors.New("not implemented")
 }
