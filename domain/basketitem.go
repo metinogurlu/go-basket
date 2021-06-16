@@ -1,4 +1,4 @@
-package basket
+package models
 
 import . "github.com/ahmetb/go-linq/v3"
 

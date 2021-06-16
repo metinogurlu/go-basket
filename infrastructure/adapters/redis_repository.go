@@ -31,10 +31,10 @@ func getRedisClient() *redis.Client {
 func (repo *RedisRepository) GetBasket(ctx context.Context, id string) (models.CustomerBasket, error) {
 	var basket models.CustomerBasket
 
-	s, _ := repo.db.Get(repo.ctx, id).Result()
+	s, err := repo.db.Get(repo.ctx, id).Result()
 	json.Unmarshal([]byte(s), &basket)
 
-	return basket, nil
+	return basket, err
 }
 
 func (repo *RedisRepository) UpdateBasket(ctx context.Context, id string, b models.CustomerBasket) error {

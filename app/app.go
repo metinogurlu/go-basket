@@ -1,7 +1,7 @@
 package app
 
 import (
-	"basket/app/command"
+	"basket/app/commands"
 	"basket/app/query"
 	"basket/infrastructure/adapters"
 	"context"
@@ -17,8 +17,8 @@ func NewApplication(ctx context.Context) Application {
 
 	return Application{
 		Commands: Commands{
-			UpdateBasket: command.NewUpdateBasketHandler(repo),
-			AddToBasket:  command.NewAddToBasketHandler(repo),
+			UpdateBasket: commands.NewUpdateBasketHandler(repo),
+			AddToBasket:  commands.NewAddToBasketHandler(repo),
 		},
 		Queries: Queries{
 			GetBasket: query.NewGetBasketHandler(repo),
@@ -31,6 +31,6 @@ type Queries struct {
 }
 
 type Commands struct {
-	UpdateBasket command.UpdateBasketHandler
-	AddToBasket  command.AddToBasketHandler
+	UpdateBasket commands.UpdateBasketHandler
+	AddToBasket  commands.AddToBasketHandler
 }
