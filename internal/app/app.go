@@ -1,10 +1,11 @@
-package app
+package basket
 
 import (
-	"basket/app/commands"
-	"basket/app/query"
-	"basket/infrastructure/adapters"
 	"context"
+
+	"github.com/metinogurlu/go-basket/internal/adapters"
+	"github.com/metinogurlu/go-basket/internal/app/commands"
+	"github.com/metinogurlu/go-basket/internal/app/queries"
 )
 
 type Application struct {
@@ -21,13 +22,13 @@ func NewApplication(ctx context.Context) Application {
 			AddToBasket:  commands.NewAddToBasketHandler(repo),
 		},
 		Queries: Queries{
-			GetBasket: query.NewGetBasketHandler(repo),
+			GetBasket: queries.NewGetBasketHandler(repo),
 		},
 	}
 }
 
 type Queries struct {
-	GetBasket query.GetBasketHandler
+	GetBasket queries.GetBasketHandler
 }
 
 type Commands struct {

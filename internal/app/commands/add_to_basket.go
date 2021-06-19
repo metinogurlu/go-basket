@@ -1,27 +1,29 @@
 package commands
 
 import (
-	"basket/config"
-	models "basket/domain"
 	"context"
+
+	"github.com/metinogurlu/go-basket/configs"
+	"github.com/metinogurlu/go-basket/internal/adapters"
+	"github.com/metinogurlu/go-basket/pkg/models"
 
 	. "github.com/ahmetb/go-linq/v3"
 )
 
 type AddToBasketHandler struct {
-	repo          models.Repository
-	configuration config.Configuration
+	repo          adapters.Repository
+	configuration configs.Configuration
 }
 
-func NewAddToBasketHandler(repo models.Repository) AddToBasketHandler {
+func NewAddToBasketHandler(repo adapters.Repository) AddToBasketHandler {
 	if repo == nil {
 		panic("repo is nil")
 	}
 
-	return AddToBasketHandler{repo, config.NewConfiguration()}
+	return AddToBasketHandler{repo, configs.NewConfiguration()}
 }
 
-func (h AddToBasketHandler) Handle(ctx context.Context, id string, itemToAdd models.BasketItem) error {
+func (h AddToBasketHandler) Handle(ctx context.Context, id string, itemToAdd models.BasketItem) error {	
 	b, err := h.repo.GetBasket(ctx, id)
 
 	if err != nil {
@@ -37,7 +39,7 @@ func (h AddToBasketHandler) Handle(ctx context.Context, id string, itemToAdd mod
 		if itemToAdd.Quantity < 0 {
 			itemToAdd.Quantity = 0
 		}
-		// TODO: Handle basket rules
+
 		if basketItem.Quantity+itemToAdd.Quantity <=
 			h.configuration.BasketRules.MaximumSameItemInBasket {
 			basketItem.Quantity += itemToAdd.Quantity

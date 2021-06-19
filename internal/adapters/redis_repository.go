@@ -1,10 +1,11 @@
 package adapters
 
 import (
-	"basket/config"
-	models "basket/domain"
 	"context"
 	"encoding/json"
+
+	"github.com/metinogurlu/go-basket/configs"
+	"github.com/metinogurlu/go-basket/pkg/models"
 
 	"github.com/go-redis/redis/v8"
 )
@@ -12,12 +13,12 @@ import (
 type RedisRepository struct {
 	db            *redis.Client
 	ctx           context.Context
-	configuration config.Configuration
+	configuration configs.Configuration
 }
 
 func NewRedisRepository() *RedisRepository {
-	c := config.NewConfiguration()
-	
+	c := configs.NewConfiguration()
+
 	return &RedisRepository{
 		db:            getRedisClient(c.Redis.ConnectionString),
 		ctx:           context.Background(),

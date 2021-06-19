@@ -1,4 +1,4 @@
-module basket
+module github.com/metinogurlu/go-basket
 
 go 1.16
 

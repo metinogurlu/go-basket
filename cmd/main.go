@@ -1,12 +1,14 @@
 package main
 
 import (
-	"basket/app"
-	controller "basket/interfaces"
 	"context"
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/metinogurlu/go-basket/internal/api"
+
+	basket "github.com/metinogurlu/go-basket/internal/app"
 
 	"github.com/gorilla/mux"
 )
@@ -15,8 +17,8 @@ func main() {
 
 	r := mux.NewRouter()
 	ctx := context.Background()
-	app := app.NewApplication(ctx)
-	c := controller.NewBasketController(app)
+	app := basket.NewApplication(ctx)
+	c := api.NewBasketController(app)
 
 	r.HandleFunc("/baskets/{id}", c.GetBasket).Methods("GET")
 	r.HandleFunc("/baskets/{id}", c.UpdateBasket).Methods("PUT")

@@ -1,19 +1,20 @@
-package interfaces
+package api
 
 import (
-	"basket/app"
-	basket "basket/domain"
 	"encoding/json"
 	"net/http"
+
+	basket "github.com/metinogurlu/go-basket/internal/app"
+	"github.com/metinogurlu/go-basket/pkg/models"
 
 	"github.com/gorilla/mux"
 )
 
 type BasketController struct {
-	app app.Application
+	app basket.Application
 }
 
-func NewBasketController(app app.Application) BasketController {
+func NewBasketController(app basket.Application) BasketController {
 	return BasketController{app}
 }
 
@@ -38,7 +39,7 @@ func (c BasketController) UpdateBasket(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
 
-	var b basket.CustomerBasket
+	var b models.CustomerBasket
 
 	err := json.NewDecoder(r.Body).Decode(&b)
 	if err != nil {
@@ -60,7 +61,7 @@ func (c BasketController) AddtoBasket(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 	}
 
-	var item basket.BasketItem
+	var item models.BasketItem
 
 	err := json.NewDecoder(r.Body).Decode(&item)
 	if err != nil {
